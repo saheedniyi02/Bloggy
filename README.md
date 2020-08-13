@@ -1,4 +1,4 @@
-
+<h1 style="color:black;size:40px;">Plan</h1>
 This template is a free template, I plan to implement a simple blog app where users can create,delete,update posts. They can also reply,edit and delete their comments. Registered users also have a profile.
 
 The app also allows unregistered users to comment on posts (they must submit their email before they can comment) and they receive an email when someone replies their comments,Also they can subscribe to posts from a specific registered user.
