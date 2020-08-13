@@ -1,3 +1,14 @@
+
+This template is a free template, I plan to implement a simple blog app where users can create,delete,update posts. They can also reply,edit and delete their comments. Registered users also have a profile.
+
+The app also allows unregistered users to comment on posts (they must submit their email before they can comment) and they receive an email when someone replies their comments,Also they can subscribe to posts from a specific registered user.
+
+I plan to use python Flask for the backend.
+
+So helo me GOD 🙏🙏
+
+
+
 <a href="https://themes.3rdwavemedia.com/bootstrap-templates/popular/devblog-free-bootstrap-4-blog-template-for-developers/" target="_blank"><img src="https://themes.3rdwavemedia.com/wp-content/uploads/2019/02/Bootstrap-Blog-Template-DevBlog-Pormo.jpg" alt="Bootstrap 4 Blog Template for Developers" /></a>
 
 ## Theme Details & Demo
