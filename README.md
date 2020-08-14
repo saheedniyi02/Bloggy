@@ -46,29 +46,14 @@ If you'd like to **use the template without the attribution**, you can [buy the 
 
 ## Colour Schemes
 
-#### Colour 1 (theme-1.css)
-<img src="https://themes.3rdwavemedia.com/wp-content/uploads/2019/02/devblog-theme-1.jpg" width="400" alt="DevBlog color 1" />
+
 
 #### Colour 2 (theme-2.css)
 <img src="https://themes.3rdwavemedia.com/wp-content/uploads/2019/02/devblog-theme-2.jpg" width="400" alt="DevBlog color 2" />
 
-#### Colour 3 (theme-3.css)
-<img src="https://themes.3rdwavemedia.com/wp-content/uploads/2019/02/devblog-theme-3.jpg" width="400" alt="DevBlog color 3" />
 
-#### Colour 4 (theme-4.css)
-<img src="https://themes.3rdwavemedia.com/wp-content/uploads/2019/02/devblog-theme-4.jpg" width="400" alt="DevBlog color 4" />
 
-#### Colour 5 (theme-5.css)
-<img src="https://themes.3rdwavemedia.com/wp-content/uploads/2019/02/devblog-theme-5.jpg" width="400" alt="DevBlog color 5" />
 
-#### Colour 6 (theme-6.css)
-<img src="https://themes.3rdwavemedia.com/wp-content/uploads/2019/02/devblog-theme-6.jpg" width="400" alt="DevBlog color 6" />
-
-#### Colour 7 (theme-7.css)
-<img src="https://themes.3rdwavemedia.com/wp-content/uploads/2019/02/devblog-theme-7.jpg" width="400" alt="DevBlog color 7" />
-
-#### Colour 8 (theme-8.css)
-<img src="https://themes.3rdwavemedia.com/wp-content/uploads/2019/02/devblog-theme-8.jpg" width="400" alt="DevBlog color 8" />
 
 ## Features
 
