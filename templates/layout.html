@@ -37,17 +37,22 @@
 					<li class="nav-item">
 					    <a class="nav-link" href="{{url_for("about")}}"><i class="fas fa-bookmark fa-fw mr-2"></i>About</a>
 					</li>
+         {% if not current_user.is_authenticated %}
 					<li class="nav-item">
 					    <a class="nav-link" href="{{url_for("register")}}"><i class="fas fa-user fa-fw mr-2"></i>Register</a>
 					</li>
-         {% if current_user.is_authenticated%}
-         <li class="nav-item">
-					    <a class="nav-link" href="{{url_for("profile.html")}}"><i class="fas fa-user fa-fw mr-2"></i>My profile</a>
+					<li class="nav-item">
+					    <a class="nav-link" href="{{url_for("login")}}"><i class="fas fa-user fa-fw mr-2"></i>login</a>
 					</li>
-         {%endif%}
-           {% if current_user.is_authenticated%}
+         {%else%}
          <li class="nav-item">
-					    <a class="nav-link" href="{{url_for("logout.html")}}"><i class="fas fa-user fa-fw mr-2"></i>Logout</a>
+					    <a class="nav-link" href="{{url_for("profile",username=current_user.username)}}"><i class="fas fa-user fa-fw mr-2"></i>My profile</a>
+					</li>
+         <li class="nav-item">
+					    <a class="nav-link" href="{{url_for("create_post")}}"><i class="fas fa-user fa-fw mr-2"></i>Create Post</a>
+					</li>
+         <li class="nav-item">
+					    <a class="nav-link" href="{{url_for("logout")}}"><i class="fas fa-user fa-fw mr-2"></i>Logout</a>
 					</li>
          {%endif%}
 				</ul>

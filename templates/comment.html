@@ -1,0 +1,63 @@
+{%extends "layout.html"%}
+{%block body%}
+
+<style> 
+.mycomment { width: 40%; 
+           height: 100px;
+           width:270px; 
+           padding: 10px;              
+           background-color:#C0C0C0;
+           align:center;
+           border-radius: 12px;
+           border: 0px solid #dddddd;
+
+.content-section {
+    background: #ffffff;
+    padding: 10px 20px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    margin-bottom: 20px;
+}
+} </style>
+<div class="content-section">
+<form method="POST" action=" ">
+       {{form.hidden_tag()}}
+        <fieldset class="form-group">
+         <legend class="border-bottom mb-4">{{legend}}</legend>
+
+         <div class="form-group">          {{form.email.label(class="form-control-label")}}
+       {% if form.email.errors %}
+             {{form.email(class="form-control form-control-lg is-invalid")}}      
+    <div class="invalid-feedbck">
+            {% for error in form.email.errors%}
+                    <span> {{error}}</span>
+    </div>
+            {% endfor%}
+        {% else %}
+    {{form.email(class="form-control form-control-lg")}}
+        {% endif %}
+          </div>
+          <div class="form-group">
+       {{form.comment.label(class="form-control-label")}}
+       {% if form.comment.errors %}
+             {{form.comment(class="mycomment")}}      
+    <div class="invalid-feedbck">
+            {% for error in form.comment.errors%}
+                    <span> {{error}}</span>
+    </div>
+            {% endfor%}
+        {% else %}
+    {{form.comment(class="mycomment")}}
+        {% endif %} </div>
+         </fieldset>
+ 
+<div class="form-group">
+{{form.submit(class="btn btn-outline-info")}}
+</div>
+      </form>
+  </div>
+
+
+{%endblock body%}
+
+
