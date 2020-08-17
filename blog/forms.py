@@ -45,17 +45,35 @@ class CommentForm(FlaskForm):
     
 class UpdateProfile(FlaskForm):
     username=StringField("username",validators=[DataRequired(),Length(min=3,max=15)])
-    picture=FileField("update profile picture",validators=[FileAllowed(["png","jpg"])])
+    picture=FileField("Profile Picture",validators=[FileAllowed(["png","jpg"])])
     email=StringField("email",validators=[Length(min=7,max=40),DataRequired()])
+    information=TextAreaField("About me")
     twitter=StringField("Twitter username")
-    linkedin=StringField("Linkedin")
+    linkedin=StringField("Linkedin username")
     instagram=StringField("Instagram username")
     submit=SubmitField("Update Profile")
+    
+    def validate_username(self,username):
+    	user=User.query.filter_by(username=username.data).first()
+    	if user:
+    		raise ValidationError("That username has been chosen, Kindly choose another one")
+    		
+    def validate_email(self,email):
+    	user=User.query.filter_by(email=email.data).first()
+    	if user:
+    		raise ValidationError("That email is taken!! Kindly choose another one")
+    	
 
 
 class RequestResetForm(FlaskForm):
 	email=StringField('email',validators=[DataRequired()])
 	submit=SubmitField("Rquest Reset password")
+	
+	def validate_email(self,email):
+		user=User.query.filter_by(email=email.data).first()
+		
+		if not user:
+			raise ValidationError("There is no account registered with this email, kindly check your email.")
 	
 	
 class ResetPasswordForm(FlaskForm):
