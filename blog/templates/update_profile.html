@@ -1,0 +1,115 @@
+{% extends "layout.html" %}
+{% block body%}
+<style>
+
+.content-section {
+    background: #ffffff;
+    padding: 10px 20px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    margin-bottom: 20px;
+}
+  
+  </style>
+
+<div class="content-section">
+    <div class="media">
+        <img class="rounded-circle account-img" src="{{image_file}}">
+     <form method="POST" action=" " enctype="multipart/form-data">
+       {{form.hidden_tag()}}
+        <fieldset class="form-group">
+         <legend class="border-bottom mb-4"> Update Profile<small>(saheedniyi02)</small></legend>
+         <div class="form-group">
+        {{form.username.label(class="form-control-label")}}
+        {% if form.username.errors %}
+             {{form.username(class="form-control form-control-lg is-invalid")}}      
+    <div class="invalid-feedbck">
+            {% for error in form.username.errors%}
+                    <span> {{error}}</span>
+    </div>
+            {% endfor%}
+        {% else %}
+    {{form.username(class="form-control form-control-lg")}}
+        {% endif %}
+
+         </div>
+         <div class="form-group">          {{form.email.label(class="form-control-label")}}
+       {% if form.email.errors %}
+             {{form.email(class="form-control form-control-lg is-invalid")}}      
+    <div class="invalid-feedbck">
+            {% for error in form.email.errors%}
+                    <span> {{error}}</span>
+    </div>
+            {% endfor%}
+        {% else %}
+    {{form.email(class="form-control form-control-lg")}}
+        {% endif %}
+          </div>
+   
+
+          <div class="form-group">          {{form.twitter.label(class="form-control-label")}}
+       {% if form.twitter.errors %}
+             {{form.twitter(class="form-control form-control-lg is-invalid")}}      
+    <div class="invalid-feedbck">
+            {% for error in form.twitter.errors%}
+                    <span> {{error}}</span>
+    </div>
+            {% endfor%}
+        {% else %}
+    {{form.twitter(class="form-control form-control-lg")}}
+        {% endif %}
+          </div>
+          <div class="form-group">          {{form.instagram.label(class="form-control-label")}}
+       {% if form.instagram.errors %}
+             {{form.instagram(class="form-control form-control-lg is-invalid")}}      
+    <div class="invalid-feedbck">
+            {% for error in form.instagram.errors%}
+                    <span> {{error}}</span>
+    </div>
+            {% endfor%}
+        {% else %}
+    {{form.instagram(class="form-control form-control-lg")}}
+        {% endif %}
+          </div>
+
+         <div class="form-group">          {{form.information.label(class="form-control-label")}}
+       {% if form.information.errors %}
+             {{form.information(class="form-control form-control-lg is-invalid")}}      
+    <div class="invalid-feedbck">
+            {% for error in form.information.errors%}
+                    <span> {{error}}</span>
+    </div>
+            {% endfor%}
+        {% else %}
+    {{form.information(class="form-control form-control-lg")}}
+        {% endif %}
+          </div>         
+          <div class="form-group">          {{form.linkedin.label(class="form-control-label")}}
+       {% if form.linkedin.errors %}
+             {{form.linkedin(class="form-control form-control-lg is-invalid")}}      
+    <div class="invalid-feedbck">
+            {% for error in form.linkedin.errors%}
+                    <span> {{error}}</span>
+    </div>
+            {% endfor%}
+        {% else %}
+    {{form.linkedin(class="form-control form-control-lg")}}
+        {% endif %}
+          </div
+          
+           <div class="form-group">
+        {{form.picture.label()}}
+        {{form.picture(class="form-control-file")}}
+        {% if form.picture.errors%}
+          {% for error in form.picture.errors%}
+            <span class="text-danger">{{error}}</span></br>
+          {% endfor %}
+        {%endif%}
+          </div>
+        </fieldset>
+<div class="form-group">
+{{form.submit(class="btn btn-outline-info")}}
+</div>
+     </form>
+</div>
+{% endblock body%}

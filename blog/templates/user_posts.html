@@ -1,16 +1,9 @@
 {%extends "layout.html" %}
-
 {%block body%}
-	    <section class="cta-section theme-bg-light py-5">
-		    <div class="container text-center">
-			    <h2 class="heading">DevBlog - A Blog Template Made For Developers</h2>
-			    <div class="intro">Welcome to my blog. Kindly view posts and enjoy.</div>
-		    </div><!--//container-->
-	    </section>
 	    <section class="blog-list px-3 py-5 p-md-5">
+     <div><h1>posts by</h1><h6>({{user.username}})</h6></div>
 		    <div class="container">
-         
-{%if posts%}
+         {%if posts%}
     {% for post in posts%}
 			    <div class="item mb-5">
 				    <div class="media">
@@ -29,10 +22,9 @@
 				  <a class="nav-link-prev nav-item nav-link rounded-left" href="{{url_for("home")}}">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
 				  <a class="nav-link-next nav-item nav-link rounded-right" href="{{url_for("home")}}">Next<i class="arrow-next fas fa-long-arrow-alt-right"></i></a>
 				</nav>
-{%endblock body%}
-    
-    
-    
-    
- 
+         
+      
+			  </div> 
+	    </section>
+{%endblock body%}   
 

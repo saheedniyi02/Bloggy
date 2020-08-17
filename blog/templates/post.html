@@ -8,8 +8,8 @@
 	    <article class="blog-post px-3 py-5 p-md-5">
 		    <div class="container">
 			    <header class="blog-post-header">
-				    <h2 class="title mb-2">Title Of The Post</h2>
-				    <div class="meta mb-3"><span class="date">Published {{time_difference}} by {{post.author.username}}</span><span class="comment">4 comments</span></div>
+				    <h2 class="title mb-2">{{title}}</h2>
+				    <div class="meta mb-3"><span class="date">Published {{post.date_posted.strftime('%d-%m-%Y')}} by {{post.author.username}}</span><span class="comment">4 comments</span></div>
 {%if post.author==current_user%}
 <div>
               <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', id=post.id) }}">Update</a>
@@ -25,6 +25,7 @@
 					    </div><!--//container-->
 	         	<div class= "blog-comments-section">
 	 </div>
+<h3><a href="{{url_for("comment",post_id=post.id)}}">You can comment here too</a></h3>
 </article>
 
 

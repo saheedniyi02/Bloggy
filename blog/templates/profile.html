@@ -14,9 +14,13 @@
          </style>
 <div class="content-section">        
 				<div class="profile-section pt-3 pt-lg-0">
-				    <img class="profile-image mb-3 rounded-circle mx-auto" src="{{url_for("static",filename="images/profile.png")}}" alt="image">			
+				    <img class="profile-image mb-3 rounded-circle mx-auto" src="{{image_path}}" alt="image">			
 					
-					<div class="bio mb-3">Hi, my name is Anthony Doe. Briefly introduce yourself here. You can also provide a link to the about page.</div><!--//bio-->
+					<div class="bio mb-3">
+{%if user.information%}
+
+        {{user.information}}
+{%endif%}</div><!--//bio-->
 					<ul class="social-list list-inline py-3 mx-auto">
 			            <li class="list-inline-item"><a href="#"><i class="fab fa-twitter fa-fw"></i></a></li>
 			            <li class="list-inline-item"><a href="#"><i class="fab fa-linkedin-in fa-fw"></i></a></li>
@@ -26,22 +30,18 @@
 				</div><!--//profile-section-->
 						
                     
-				<ul class="navbar-nav flex-column text-left">
-					<li class="nav-item">
-					    <a class="nav-link" href="index.html" style="color:white"><i class="fas fa-home fa-fw mr-2"></i>Blog Home <span class="sr-only">(current)</span></a>
-					</li>
-					<li class="nav-item">
-					    <a class="nav-link" href="blog-post.html" style="color:white"><i class="fas fa-bookmark fa-fw mr-2"></i>Post by me</a>
-					</li>
-					<li class="nav-item active">
-					    <a class="nav-link" href="about.html" style="color:white"><i class="fas fa-user fa-fw mr-2"></i>About Me</a>
-					</li>
-				</ul>
-				
+
+       <div class="my-2 my-md-3">
+					
+				    <a class="btn btn-primary" href="{{url_for("user_post",username=user.username)}}" target="_blank">Posts by Me</a>
+				    
+
+				</div>
+				{%if current_user==user%}
 				<div class="my-2 my-md-3">
 					
-				    <a class="btn btn-primary" href="https://themes.3rdwavemedia.com/" target="_blank">Update My Profile</a>
-				    
+				    <a href="{{url_for("updateprofile",user_id=current_user.id)}}" class="btn btn-primary" href="https://themes.3rdwavemedia.com/" target="_blank">Update My Profile</a>
+				 {%endif%}
 
 				</div>
 </div>

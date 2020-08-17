@@ -1,23 +1,23 @@
-{%extends "layout.html"%}
-{%block body%}
+{% extends "layout.html" %}
+{% block body%}
 
-<style> 
+<style>
+
 .content-section {
     background: #ffffff;
     padding: 10px 20px;
     border: 1px solid #dddddd;
     border-radius: 3px;
     margin-bottom: 20px;
-
-} </style>
-
-<div>
-  <div class="content-section">
+}
+  
+  </style>
+    <div class="content-section">
       <form method="POST" action=" ">
        {{form.hidden_tag()}}
         <fieldset class="form-group">
          <legend class="border-bottom mb-4">{{legend}}</legend>
-{%if current_user.is_authenticated%}
+
          <div class="form-group">          {{form.email.label(class="form-control-label")}}
        {% if form.email.errors %}
              {{form.email(class="form-control form-control-lg is-invalid")}}      
@@ -30,20 +30,6 @@
     {{form.email(class="form-control form-control-lg")}}
         {% endif %}
           </div>
-{%endif%}
-          <div class="form-group">
-
-{{form.comment.label(class="form-control-label")}}
-       {% if form.comment.errors %}
-             {{form.comment(class="form-control form-control-lg is-invalid")}}      
-    <div class="invalid-feedbck">
-            {% for error in form.comment.errors%}
-                    <span> {{error}}</span>
-    </div>
-            {% endfor%}
-        {% else %}
-    {{form.comment(class="form-control form-control-lg")}}
-        {% endif %} </div>
 
         </fieldset>
  
@@ -52,7 +38,4 @@
 </div>
       </form>
 </div>
-</div>
-{%endblock body%}
-
-
+{% endblock body%}
