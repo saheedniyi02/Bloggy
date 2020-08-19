@@ -12,7 +12,8 @@ from datetime import datetime
 
 @app.route("/")
 def home():
-	posts=Post.query.all()
+	page=request.args.get("page",1,type=int)
+	posts=Post.query.order_by(Post.date_posted.desc()).paginate(per_page=6,page=page)
 	return render_template("home.html",posts=posts)
 
 @app.route("/about")
@@ -73,11 +74,12 @@ def create_post():
 		db.session.add(post)
 		db.session.commit()
 		flash("Your post has been created","success")
-		return redirect("home.html")
+		return redirect(url_for("home"))
 	return render_template("create_post.html",form=form,legend="Create Post")
 
 
 @app.route("/post/update/<int:id>",methods=["POST","GET"])
+@login_required
 def update_post(id):
 	post=Post.query.get_or_404(id)
 	if post.author!=current_user:
@@ -99,9 +101,9 @@ def update_post(id):
 
 @app.route("/post/<int:id>")
 def post(id):
-	form=CommentForm()
 	post=Post.query.get_or_404(id)
-	return render_template("post.html",post=post)
+	comments=Comment.query.filter_by(topic=post).order_by(Comment.date_posted.desc()).all()
+	return render_template("post.html",post=post,comments=comments,Reply=Reply)
 
 
 @app.route("/post/delete/<int:id>",methods=["POST","GET"])
@@ -120,12 +122,16 @@ def comment(post_id):
 	form=CommentForm()
 	if form.validate_on_submit():
 		if current_user.is_authenticated:
-			comment=Comment(name=current_user.email[6],email=current_user.email,comment=form.comment.data,topic=post)
+			comment=Comment(name=current_user.username,email=form.email.data,comment=form.comment.data,topic=post)
 		else:
-			comment=Comment(name=form.email.data[6],email=form.email.data,comment=form.comment.data,topic=post)
+			if form.email.data:
+				comment=Comment(name=form.email.data[0:6]+"...@"+form.email.data.split("@")[-1],email=form.email.data,comment=form.comment.data,topic=post)
+			else:
+				comment=Comment(name="AnonymousUser",email=form.email.data,comment=form.comment.data,topic=post)				
 		db.session.add(comment)
 		db.session.commit()
-	return redirect(url_for("post",id=post_id))	
+		send_comment_email(post_id,comment)
+		return redirect(url_for("post",id=post.id))
 	return render_template("comment.html",form=form,legend="Comment")
 	
 	
@@ -135,13 +141,17 @@ def reply(comment_id):
 	form=CommentForm()
 	if form.validate_on_submit():
 		if current_user.is_authenticated:
-			reply=Reply(name=current_user.email[6],email=current_user.email,comment=form.comment.data,replied=comment)
+			reply=Reply(name=current_user.username,email=form.email.data,comment=form.comment.data,replied=comment)
 		else:
-			reply=Reply(name=form.email.data[6],email=form.email.data,comment=form.comment.data,topic=post)
+			if form.email.data:
+				reply=Reply(name=form.email.data[0:6]+"...@"+form.email.data.split("@")[-1],email=form.email.data,comment=form.comment.data,replied=comment)
+			else:
+				reply=Reply(name="AnonymousUser",email=form.email.data,comment=form.comment.data,replied=comment)
 		db.session.add(reply)
-		db.session.commit(reply)
-		return redirect(url_for("post",id=post_id))	
-	return render_template("comment.html",form=form,legend="Reply")
+		db.session.commit()
+		send_reply_email(comment_id,reply)
+		return redirect(url_for("comment_replies",id=reply.replied.id))		
+	return render_template("comment.html",form=form,legend="Reply",comment=comment)
 	
 
 def save_picture(form_picture):
@@ -150,7 +160,7 @@ def save_picture(form_picture):
 	picture_fn=random_hex+f_ext
 	picture_path=os.path.join(app.root_path,"static/profile_pics",picture_fn)
 	
-	output_size=(125,125)
+	output_size=(150,150)
 	i=Image.open(form_picture)
 	i.thumbnail(output_size)
 	i.save(picture_path)
@@ -193,7 +203,7 @@ def send_request_email(user):
 	token=user.get_reset_token()
 	msg=Message("User Passsord Reset",sender="nooreply@gmail.com",recipients=[user.email])
 	msg.body=f'''Password Reset Email
-	To reset your password,kindly click the attached link
+To reset your password,kindly click the attached link
 	{url_for("resetpassword",token=token,_external=True)}
 	
 	
@@ -236,6 +246,62 @@ def resetpassword(token):
 	
 @app.route("/userposts/<string:username>")
 def user_post(username):
+	page=request.args.get("page",1,type=int)
 	user=User.query.filter_by(username=username).first()
-	posts=Post.query.filter_by(author=user)
+	posts=Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(per_page=6,page=page)
 	return render_template("user_posts.html",posts=posts,user=user)
+	
+	
+@app.route("/viewreplies/<int:id>/")
+def comment_replies(id):
+	comment=Comment.query.get(id)
+	replies=Reply.query.filter_by(replied=comment).all()
+	#order_by(Reply.date_posted.desc()).all()
+	return render_template("replies.html",comment=comment,replies=replies)
+	
+	
+def send_comment_email(id,new_comment):
+	post=Post.query.get(id)
+	author_email=post.author.email
+	msg=Message("Comment Notification from blogIt",sender="noreply@gmail.com",recipients=[author_email])
+	msg.body=f"""
+Someone Commented on your post on at Blogit.
+{url_for("post",id=post.id)}.
+{new_comment.comment[0:int(len(new_comment.comment)/3)]}
+	"""
+	mail.send(msg)
+
+	
+	
+def send_reply_email(id,new_reply):
+	comment=Comment.query.get(id)
+	replies=Reply.query.filter_by(replied=comment).all()
+	email_commenter=[comment.email]
+	email_of_previously_replied=[]
+	if replies:
+		for reply in replies:
+			if reply.email !="AnonymousUser":
+				email_of_previously_replied.append(reply.email)
+		msg_repliers=Message("Notification From Blog It",sender="noreply@gmail.com",recipients=email_of_previously_replied)
+		msg_repliers.body=f'''Someone also replied to a post you replied to. 
+		{url_for("comment_replies",id=id,_external=True)}
+
+{new_reply[0:int(len(new_reply)/3)]}
+			
+		
+		
+		
+		
+		'''
+		
+	msg_commenter=Message("Notification From Blog It",sender="noreply@gmail.com",recipients=email_commenter)
+	msg_commenter.body=f'''
+Someone replied to a comment you made on blogit
+'{url_for("comment_replies",id=id)}'
+
+{new_reply[0:int(len(new_reply)/3)]}
+	
+	'''
+	mail.send(msg_commenter)
+	
+	

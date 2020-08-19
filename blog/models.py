@@ -62,6 +62,7 @@ class Comment(db.Model):
 	id=db.Column(db.Integer,primary_key=True)
 	name=db.Column(db.String(50),nullable=False)
 	comment=db.Column(db.Text,nullable=False)
+	date_posted=db.Column(db.DateTime,nullable=False,default=datetime.utcnow)
 	email=db.Column(db.String(50),nullable=False)
 	replies=db.relationship("Reply",backref="replied")
 	post_id=db.Column(db.Integer,db.ForeignKey("post.id"))
@@ -70,7 +71,8 @@ class Comment(db.Model):
 
 class Reply(db.Model):
 	id=db.Column(db.Integer,primary_key=True)
-	name=db.Column(db.Text(50),nullable=False)
+	name=db.Column(db.String(50),nullable=False)
 	comment=db.Column(db.Text,nullable=False)
+	date_posted=db.Column(db.DateTime,nullable=False,default=datetime.utcnow)
 	email=db.Column(db.String(50),nullable=False)
 	comment_id=db.Column(db.Integer,db.ForeignKey("comment.id"))
