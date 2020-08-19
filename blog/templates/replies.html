@@ -1,0 +1,95 @@
+{%extends "layout.html"%}
+{%block body%}
+<!--.content-section {
+    background: #ffffff;
+    padding: 10px 20px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    margin-bottom: 20px;
+}--><a href="{{url_for("post",id=comment.topic.id)}}">Back to post</a>
+<div style="margin-bottom:5px;margin-top:10px;font-size;5px"><h3>Comment</h3></div>
+     	         <div style="background-color:#C0C0C0;border-radius:8px;width:280px;">
+  <table >
+<tr class="headerr">
+<td class="avatar" rowspan="3">
+
+
+</td>
+<td class="user-info">
+
+<strong class="fullname"></strong>
+<div class="name">
+<span style="color:blue">By: </span><span style="color:blue">{{comment.name}}</span>
+    </div>
+</a>
+</td>
+<td class="timestamp">
+<small>{{comment.date_posted.strftime("%d-%m-%Y")}}</small>
+</td>
+</tr>
+<tr class="container">
+<td class="content" colspan="2">
+
+<div class="text">
+<div class="dir-ltr" dir="ltr"> 
+{{comment.comment}}</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="meta-and-actions" colspan="2">
+<span class="metadata">
+<div>
+<a href="{{url_for("reply",comment_id=comment.id)}}" style="color:blue"><h6 > Reply</h6></a><div>
+
+</td>
+</tr>
+</table>
+</div><hr/>
+<h4  style="margin-bottom:5px;margin-top:1px;font-size;5px"  >Replies</h4><hr/>
+{%for reply in replies%}
+       
+          	         <div style="background-color:#C0C0C0;border-radius:8px;width:280px;padding:6px 12px;">
+  <table >
+<tr class="headerr">
+<td class="avatar" rowspan="3">
+
+
+</td>
+<td class="user-info">
+
+<strong class="fullname"></strong>
+<div class="name">
+<span style="color:blue">By: </span><span style="color:blue">{{reply.name}}</span>
+    </div>
+</a>
+</td>
+<td class="timestamp">
+<small>{{reply.date_posted.strftime("%d-%m-%Y")}}</small>
+</td>
+</tr>
+<tr class="container">
+<td class="content" colspan="2">
+
+<div class="text">
+<div class="dir-ltr" dir="ltr"> 
+{{reply.comment}}</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="meta-and-actions" colspan="2">
+<span class="metadata">
+
+</td>
+</tr>
+</table>
+</div><hr/>
+{%endfor%}
+</div>
+
+
+
+
+
+{%endblock body%}

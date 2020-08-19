@@ -55,9 +55,10 @@
 					    <a class="nav-link" href="{{url_for("logout")}}"><i class="fas fa-user fa-fw mr-2"></i>Logout</a>
 					</li>
          {%endif%}
-				</ul>
+				</ul></div>
 		</nav>
    </header>
+   <hr style="margin-bottom:1.5px;margin-top:0px;">
 <div class="col-md-14"> 
 {% with messages=get_flashed_messages(with_categories=True) %}
     {% if messages %}
@@ -66,14 +67,17 @@
        {% endfor%}
     {% endif %}
 {% endwith %}
+</div>
+<div>
 {% block body %}
 {% endblock body %} 
-</div> 
+</div><div>
 	    <footer class="footer text-center py-2 theme-bg-dark">
 		   <!--/* This template is released under the Creative Commons Attribution 3.0 License. Please keep the attribution link below when using for your own project. Thank you for your support. :) If you'd like to use the template without the attribution, you can buy the commercial license via our website: themes.3rdwavemedia.com */-->
                 <small class="copyright">Designed with <i class="fas fa-heart" style="color: #fb866a;"></i> by <a href="http://themes.3rdwavemedia.com" target="_blank">Xiaoying Riley</a> for developers</small>
 		   
 	    </footer>
+</div>
     <!-- *****CONFIGURE STYLE (REMOVE ON YOUR PRODUCTION SITE)****** -->  
     <div id="config-panel" class="config-panel d-none d-lg-block">
         <div class="panel-inner">
@@ -105,10 +109,7 @@
 
     <!-- Custom JS -->
     <script src="{{url_for("static",filename="/js/blog.js")}}"></script>
-    
-    <!-- Style Switcher (REMOVE ON YOUR PRODUCTION SITE) -->
-    <script src="{{url_for("static",filename="/js/demo/style-switcher.js")}}"></script>     
-    
+ 
 
 </body>
 </html> 

@@ -11,10 +11,18 @@
     length:100%;
     border:blue;
 }
+.account-img {
+    height: 150px;
+    width: 150px;
+    margin-right: 20px;
+    margin-bottom: 16px;
+}
+
          </style>
+<div style="margin:auto;">
 <div class="content-section">        
-				<div class="profile-section pt-3 pt-lg-0">
-				    <img class="profile-image mb-3 rounded-circle mx-auto" src="{{image_path}}" alt="image">			
+				<div class="profile-section pt-3 pt-lg-0"><img class="rounded-circle account-img" src="{{image_path}}"><div><h6 style="color:white">{{user.username}}</h6></div>
+				    
 					
 					<div class="bio mb-3">
 {%if user.information%}
@@ -22,9 +30,15 @@
         {{user.information}}
 {%endif%}</div><!--//bio-->
 					<ul class="social-list list-inline py-3 mx-auto">
-			            <li class="list-inline-item"><a href="#"><i class="fab fa-twitter fa-fw"></i></a></li>
-			            <li class="list-inline-item"><a href="#"><i class="fab fa-linkedin-in fa-fw"></i></a></li>
-			            <li class="list-inline-item"><a href="#"><i class="fab fa-github-alt fa-fw"></i></a></li>
+{%if user.twitter%}
+			            <li class="list-inline-item"><a href="www.twitter.com/{{user.twitter}}"><i class="fab fa-twitter fa-fw"></i></a></li>
+{%endif%}
+{%if user.Linkedin%}
+			            <li class="list-inline-item"><a href="www.linkedin.com/{{user.Linkedin}}"><i class="fab fa-linkedin-in fa-fw"></i></a></li>
+{%endif%}
+{%if user.instagram%}
+			            <li class="list-inline-item"><a href="www.instagram.com/{{user.instagram}}"><i class="fab fa-instagram fa-fw"></i></a></li>
+{%endif%}
 			        </ul><!--//social-list-->
 			        <hr> 
 				</div><!--//profile-section-->
@@ -33,17 +47,18 @@
 
        <div class="my-2 my-md-3">
 					
-				    <a class="btn btn-primary" href="{{url_for("user_post",username=user.username)}}" target="_blank">Posts by Me</a>
+				    <a class="btn btn-primary" href="{{url_for("user_post",username=user.username)}}" target="_blank">Posts by {{user.username}}</a>
 				    
 
 				</div>
 				{%if current_user==user%}
 				<div class="my-2 my-md-3">
 					
-				    <a href="{{url_for("updateprofile",user_id=current_user.id)}}" class="btn btn-primary" href="https://themes.3rdwavemedia.com/" target="_blank">Update My Profile</a>
+				    <a href="{{url_for("updateprofile",user_id=current_user.id)}}" class="btn btn-primary" target="_blank">Update My Profile</a>
 				 {%endif%}
 
 				</div>
+</div>
 </div>
 {%endblock body%}
 

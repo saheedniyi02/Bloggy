@@ -9,7 +9,7 @@
 		    <div class="container">
 			    <header class="blog-post-header">
 				    <h2 class="title mb-2">{{title}}</h2>
-				    <div class="meta mb-3"><span class="date">Published {{post.date_posted.strftime('%d-%m-%Y')}} by {{post.author.username}}</span><span class="comment">4 comments</span></div>
+				    <div class="meta mb-3"><span class="date">Published {{post.date_posted.strftime('%d-%m-%Y')}} by {{post.author.username}}</span><span class="comment">5 comments</span></div>
 {%if post.author==current_user%}
 <div>
               <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', id=post.id) }}">Update</a>
@@ -17,15 +17,70 @@
 </div>
 {%endif%}
 			    </header>
-			    
-			    <div class="blog-post-body">
-				   {{post.content}}
-			    </div>
+			    {{post.content}}
+
   
-					    </div><!--//container-->
-	         	<div class= "blog-comments-section">
-	 </div>
-<h3><a href="{{url_for("comment",post_id=post.id)}}">You can comment here too</a></h3>
+			 	    </div><!--//container-->
+
+<!--.content-section {
+    background: #ffffff;
+    padding: 10px 20px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    margin-bottom: 20px;-->
+  {%if not comments%}  
+<div style="padding:6px 12px">
+  <a href="{{url_for("comment",post_id=post .id)}}" style="color:#800000">  Add a Comment here </a></div> {%else%} <div style="padding:6px 12px">
+  <a href="{{url_for("comment",post_id=post.id)}}" style="color:#800000">  Add a Comment here too   </a></div> <h6 style="color:blue;padding:6x 12px;">Comments</h6>
+      {%for comment in comments%}
+	         <div style="background-color:#C0C0C0;border-radius:8px;width:280px;padding:6px 12px;">
+  <table >
+<tr class="headerr">
+<td class="avatar" rowspan="3">
+
+
+</td>
+<td class="user-info">
+
+<strong class="fullname"></strong>
+<div class="name">
+<span style="color:blue">By: </span><span style="color:blue">{{comment.name}}</span>
+    </div>
+</a>
+</td>
+<td class="timestamp">
+<small>{{comment.date_posted.strftime("%d-%m-%Y")}}</small>
+</td>
+</tr>
+<tr class="container">
+<td class="content" colspan="2">
+
+<div class="text">
+<div class="dir-ltr" dir="ltr"> 
+{{comment.comment}}</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="meta-and-actions" colspan="2">
+<span class="metadata">
+{%with replies=Reply.query.filter_by(replied=comment).first() %}
+{%if replies%}
+<div>
+<a href="{{url_for("comment_replies",id=comment.id)}}" style="color:blue">View Replies to this comment</a>
+<a href="{{url_for("reply",comment_id=comment.id)}}" style="color:blue"><h6>You can reply too </h6></a>
+</div>
+{%else%}
+<div>
+<a href="{{url_for("reply",comment_id=comment.id)}}" style="color:blue"><h6>Reply</h6></a></div>
+{%endif%}
+{%endwith%}
+</td>
+</tr>
+</table>
+</div>
+<hr/>
+    {%endfor%}{%endif%}
 </article>
 
 
@@ -55,7 +110,8 @@
             </div>
         </div>
     </div>
-</div>
+     </div>
+    
 {%endblock body%}
 
  	
