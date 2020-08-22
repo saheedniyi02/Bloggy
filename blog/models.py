@@ -1,5 +1,5 @@
 from datetime import datetime 
-from flask_login import UserMixin
+from flask_login import UserMixin,current_user
 from blog import db,login_manager,app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
@@ -41,7 +41,7 @@ class User(db.Model,UserMixin):
 	
 	
 	def __repr__(self):
-		return (f"{self.username} user")
+		return (f"username:{self.username},id:{self.id}")
 	
 	
 	
@@ -49,13 +49,14 @@ class Post(db.Model):
 	id=db.Column(db.Integer,primary_key=True)
 	title=db.Column(db.String(50),nullable=False)
 	content=db.Column(db.Text,nullable=False)
+	brief=db.Column(db.Text,nullable=False)
 	date_posted=db.Column(db.DateTime,nullable=False,default=datetime.utcnow)
 	user_id=db.Column(db.Integer,db.ForeignKey("user.id"))
 	comment=db.relationship("Comment",backref="topic",lazy=True)
 	
 	
 	def __repr__(self):
-		return (f"{self.id} date{self.date_posted}")
+		return (f"id:{self.id} date:{self.date_posted} title:{self.title}")
 
 
 class Comment(db.Model):

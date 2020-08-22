@@ -1,6 +1,6 @@
 from blog.models import User,Post,Comment,Reply
 from flask import render_template,url_for,flash,redirect,request,abort
-from blog.forms import LoginForm,RegisterForm,PostForm,CommentForm,UpdateProfile,RequestResetForm,ResetPasswordForm
+from blog.forms import LoginForm,RegisterForm,PostForm,CommentFormCurrent,CommentFormAnonymous,UpdateProfile,RequestResetForm,ResetPasswordForm
 from . import app,db,bcrypt,mail
 from flask_login import login_user,logout_user,login_required,current_user
 import secrets
@@ -14,7 +14,7 @@ from datetime import datetime
 def home():
 	page=request.args.get("page",1,type=int)
 	posts=Post.query.order_by(Post.date_posted.desc()).paginate(per_page=6,page=page)
-	return render_template("home.html",posts=posts)
+	return render_template("home.html",posts=posts,Comment=Comment)
 
 @app.route("/about")
 def about():
@@ -30,6 +30,7 @@ def login():
 		user=User.query.filter_by(username=form.username.data).first()
 		if user and bcrypt.check_password_hash(user.password,form.password.data):
 			login_user(user,form.remember.data)
+			flash("You have been logged in","success")
 			next_page=request.args.get("next")
 			return redirect(next_page) if next_page else redirect(url_for("home"))
 		else:
@@ -55,7 +56,7 @@ def register():
 def profile(username):
 	user=User.query.filter_by(username=username).first()
 	image_path=url_for("static",filename="profile_pics/"+user.image)
-	
+
 	return render_template("profile.html",user=user,image_path=image_path)
 
 
@@ -70,7 +71,7 @@ def logout():
 def create_post():
 	form=PostForm()
 	if form.validate_on_submit():
-		post=Post(title=form.title.data,content=form.content.data,author=current_user)
+		post=Post(title=form.title.data,content=form.content.data,brief=form.content.data[:int(len(form.content.data)/6)],author=current_user)
 		db.session.add(post)
 		db.session.commit()
 		flash("Your post has been created","success")
@@ -103,7 +104,7 @@ def update_post(id):
 def post(id):
 	post=Post.query.get_or_404(id)
 	comments=Comment.query.filter_by(topic=post).order_by(Comment.date_posted.desc()).all()
-	return render_template("post.html",post=post,comments=comments,Reply=Reply)
+	return render_template("post.html",post=post,comments=comments,Reply=Reply,Comment=Comment)
 
 
 @app.route("/post/delete/<int:id>",methods=["POST","GET"])
@@ -119,38 +120,44 @@ def delete_post(id):
 @app.route("/comment/<int:post_id>",methods=["GET","POST"])
 def comment(post_id):
 	post=Post.query.get(post_id)
-	form=CommentForm()
-	if form.validate_on_submit():
-		if current_user.is_authenticated:
-			comment=Comment(name=current_user.username,email=form.email.data,comment=form.comment.data,topic=post)
-		else:
-			if form.email.data:
+	if current_user.is_authenticated:
+			form=CommentFormCurrent()
+			if form.validate_on_submit():
+				comment=Comment(name=current_user.username,email=current_user.email,comment=form.comment.data,topic=post)
+				db.session.add(comment)
+				db.session.commit()
+				send_comment_email(post_id,comment)
+				return redirect(url_for("post",id=post.id))
+	else:
+			form=CommentFormAnonymous()
+			if form.validate_on_submit():
 				comment=Comment(name=form.email.data[0:6]+"...@"+form.email.data.split("@")[-1],email=form.email.data,comment=form.comment.data,topic=post)
-			else:
-				comment=Comment(name="AnonymousUser",email=form.email.data,comment=form.comment.data,topic=post)				
-		db.session.add(comment)
-		db.session.commit()
-		send_comment_email(post_id,comment)
-		return redirect(url_for("post",id=post.id))
+				db.session.add(comment)
+				db.session.commit()
+				send_comment_email(post_id,comment)
+				return redirect(url_for("post",id=post.id))
 	return render_template("comment.html",form=form,legend="Comment")
 	
 	
 @app.route("/reply/<int:comment_id>",methods=["GET","POST"])
 def reply(comment_id):
 	comment=Comment.query.get(comment_id)
-	form=CommentForm()
-	if form.validate_on_submit():
-		if current_user.is_authenticated:
-			reply=Reply(name=current_user.username,email=form.email.data,comment=form.comment.data,replied=comment)
-		else:
-			if form.email.data:
+	if current_user.is_authenticated:
+			form=CommentFormCurrent()
+			if form.validate_on_submit():
+				reply=Reply(name=current_user.username,email=current_user.email,comment=form.comment.data,replied=comment)
+				db.session.add(reply)
+				db.session.commit()
+				send_reply_email(comment_id,reply)
+				return redirect(url_for("comment_replies",id=reply.replied.id))	
+	else:
+			form=CommentFormAnonymous()
+			if form.validate_on_submit():
 				reply=Reply(name=form.email.data[0:6]+"...@"+form.email.data.split("@")[-1],email=form.email.data,comment=form.comment.data,replied=comment)
-			else:
-				reply=Reply(name="AnonymousUser",email=form.email.data,comment=form.comment.data,replied=comment)
-		db.session.add(reply)
-		db.session.commit()
-		send_reply_email(comment_id,reply)
-		return redirect(url_for("comment_replies",id=reply.replied.id))		
+				db.session.add(reply)
+				db.session.commit()
+				send_reply_email(comment_id,reply)
+				return redirect(url_for("comment_replies",id=reply.replied.id))		
 	return render_template("comment.html",form=form,legend="Reply",comment=comment)
 	
 
@@ -255,8 +262,7 @@ def user_post(username):
 @app.route("/viewreplies/<int:id>/")
 def comment_replies(id):
 	comment=Comment.query.get(id)
-	replies=Reply.query.filter_by(replied=comment).all()
-	#order_by(Reply.date_posted.desc()).all()
+	replies=Reply.query.filter_by(replied=comment).order_by(Reply.date_posted.desc()).all()
 	return render_template("replies.html",comment=comment,replies=replies)
 	
 	
@@ -286,7 +292,7 @@ def send_reply_email(id,new_reply):
 		msg_repliers.body=f'''Someone also replied to a post you replied to. 
 		{url_for("comment_replies",id=id,_external=True)}
 
-{new_reply[0:int(len(new_reply)/3)]}
+{new_reply.comment[0:int(len(new_reply.comment)/3)]}
 			
 		
 		
@@ -297,11 +303,10 @@ def send_reply_email(id,new_reply):
 	msg_commenter=Message("Notification From Blog It",sender="noreply@gmail.com",recipients=email_commenter)
 	msg_commenter.body=f'''
 Someone replied to a comment you made on blogit
-'{url_for("comment_replies",id=id)}'
+'{url_for("comment_replies",id=id,_external=True)}'
 
-{new_reply[0:int(len(new_reply)/3)]}
+{new_reply.comment[0:int(len(new_reply.comment)/3)]}
 	
 	'''
 	mail.send(msg_commenter)
-	
 	

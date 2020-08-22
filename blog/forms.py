@@ -3,7 +3,7 @@ from flask_wtf.file import FileField,FileAllowed
 from wtforms import StringField,PasswordField,SubmitField,BooleanField,TextAreaField,ValidationError
 from wtforms.validators import Length,DataRequired,EqualTo,Email
 from blog.models import User
-
+from flask_login import current_user
 
 class RegisterForm(FlaskForm):
 	username=StringField("username",validators=[Length(min=3,max=15),DataRequired()])
@@ -38,10 +38,21 @@ class PostForm(FlaskForm):
 	submit=SubmitField("post")
 	
 
-class CommentForm(FlaskForm):
+class CommentFormCurrent(FlaskForm):
+    comment=TextAreaField("comment",validators=[DataRequired()])
+    submit=SubmitField("Comment")
+    
+    
+class CommentFormAnonymous(FlaskForm):
     email=StringField("email",validators=[Email()])
     comment=TextAreaField("comment",validators=[DataRequired()])
     submit=SubmitField("Comment")
+    
+    def validate_email(self,email):
+        user=User.query.filter_by(email=email.data).first()
+        if user:
+        	raise ValidationError("This email has been registered to an account here!! Kindly login to comment")
+        
     
 class UpdateProfile(FlaskForm):
     username=StringField("username",validators=[DataRequired(),Length(min=3,max=15)])
@@ -60,11 +71,10 @@ class UpdateProfile(FlaskForm):
     			raise ValidationError("That username has been chosen, Kindly choose another one")
     		
     def validate_email(self,email):
-    	if email.data!=current_user.username:
+    	if email.data!=current_user.email:
     		user=User.query.filter_by(email=email.data).first()
     		if user:
-    			raise ValidationError("That email is taken!! Kindly choose another one")
-    	
+    			raise ValidationError("That Email has been chosen, Kindly choose another one")
     	
     	
 
