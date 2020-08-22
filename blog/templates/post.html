@@ -9,7 +9,7 @@
 		    <div class="container">
 			    <header class="blog-post-header">
 				    <h2 class="title mb-2">{{title}}</h2>
-				    <div class="meta mb-3"><span class="date">Published {{post.date_posted.strftime('%d-%m-%Y')}} by {{post.author.username}}</span><span class="comment">5 comments</span></div>
+				    <div class="meta mb-3"><span class="date">Published {{post.date_posted.strftime('%d-%m-%Y')}} by {{post.author.username}}</span><span class="comment">{{Comment.query.filter_by(topic=post).count()}} comments</span></div>
 {%if post.author==current_user%}
 <div>
               <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', id=post.id) }}">Update</a>
@@ -18,19 +18,9 @@
 {%endif%}
 			    </header>
 			    {{post.content}}
-
-  
-			 	    </div><!--//container-->
-
-<!--.content-section {
-    background: #ffffff;
-    padding: 10px 20px;
-    border: 1px solid #dddddd;
-    border-radius: 3px;
-    margin-bottom: 20px;-->
-  {%if not comments%}  
-<div style="padding:6px 12px">
-  <a href="{{url_for("comment",post_id=post .id)}}" style="color:#800000">  Add a Comment here </a></div> {%else%} <div style="padding:6px 12px">
+            {%if not comments%}  
+<div style="margin-top:20px">
+  <a href="{{url_for("comment",post_id=post .id)}}" style="color:#800000">  Add a Comment here </a></div> {%else%} <div style="margin-top:20px">
   <a href="{{url_for("comment",post_id=post.id)}}" style="color:#800000">  Add a Comment here too   </a></div> <h6 style="color:blue;padding:6x 12px;">Comments</h6>
       {%for comment in comments%}
 	         <div style="background-color:#C0C0C0;border-radius:8px;width:280px;padding:6px 12px;">
@@ -81,6 +71,16 @@
 </div>
 <hr/>
     {%endfor%}{%endif%}
+  
+			 	    </div><!--//container-->
+
+<!--.content-section {
+    background: #ffffff;
+    padding: 10px 20px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    margin-bottom: 20px;-->
+ 
 </article>
 
 

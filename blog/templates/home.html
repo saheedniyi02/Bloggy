@@ -17,8 +17,8 @@
 					    <img class="mr-3 img-fluid post-thumb d-none d-md-flex" src="static/images/blog/blog-post-thumb-1.jpg" alt="image">
 					    <div class="media-body">
 						    <h3 class="title mb-1"><a href="{{url_for("post",id=post.id)}}">{{post.title}}</a></h3>
-						    <div class="meta mb-1"><span class="date">Published {{post.date_posted.strftime("%d-%m-%Y")}} by<a href="{{url_for("profile",username=post.author.username)}}" style="color:#5BC3D5" > {{post.author.username}}</a></span><span class="comment">8 comments</span></div>
-						    <div class="intro">{{post.content}}</div>
+						    <div class="meta mb-1"><span class="date">Published {{post.date_posted.strftime("%d-%m-%Y")}} by<a href="{{url_for("profile",username=post.author.username)}}" style="color:#5BC3D5" > {{post.author.username}}</a></span><span class="comment">{{Comment.query.filter_by(topic=post).count()}} comments</span></div>
+						    <div class="intro">{{post.brief}}</div>
 						    <a class="more-link" href="{{url_for("post",id=post.id)}}">Read more &rarr;</a>
 					    </div><!--//media-body-->
 				    </div><!--//media-->
@@ -27,7 +27,7 @@
 {%endif%}
          {%if posts.has_prev or posts.has_next%}
 			      <nav class="blog-nav nav nav-justified my-5">
-				 {% if posts.has_prev%} <a class="nav-link-prev nav-item nav-link rounded-left" href="{{url_for("home",page=posts.prev_num)}}">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
+				 {% if posts.has_prev%} class="nav-link-prev nav-item nav-link rounded-left" href="{{url_for("home",page=posts.prev_num)}}">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
         {%endif%}
         {%if posts.has_next%}
 				  <a class="nav-link-next nav-item nav-link rounded-right" href="{{url_for("home",page=posts.next_num)}}">Next<i class="arrow-next fas fa-long-arrow-alt-right"></i></a>
